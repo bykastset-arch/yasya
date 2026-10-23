@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Моя кішка Яся</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #111;
+    overflow: hidden;
+    font-family: monospace;
+  }
+  #cat-wrap {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    transition: left 1s ease;
+    cursor: pointer;
+  }
+  #cat-wrap.moved { left: 75%; }
+  #cat {
+    width: 260px;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 0 25px rgba(255,255,255,.2);
+    display: block;
+  }
+  #hint {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #eee;
+    font-size: 28px;
+    text-align: center;
+    pointer-events: none;
+    transition: opacity .5s;
+    padding: 0 20px;
+  }
+  #terminal {
+    position: absolute;
+    top: 12%;
+    left: 8%;
+    right: 60%;
+    bottom: 10%;
+    color: #0f0;
+    font-size: 20px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    overflow: hidden;
+    text-shadow: 0 0 8px #0f0;
+    display: none;
+  }
+  #cursor {
+    display: inline-block;
+    width: 12px;
+    background: #0f0;
+    animation: blink 0.8s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
+</head>
+<body>
+
+<div id="hint">Нажміть на мою кішку та дізнайтеся про неї</div>
+
+<div id="cat-wrap">
+  <img id="cat" src="cat.jpg" alt="Моя кішка Яся" usemap="#catmap">
+  <map name="catmap">
+    <area id="catarea" shape="rect" coords="0,0,260,340" href="#" alt="Яся">
+  </map>
+</div>
+
+<div id="terminal"><span id="text"></span><span id="cursor">&nbsp;</span></div>
+
+<script>
+const SCRIPT_TEXT = `> Запуск програми "про_кішку.exe"...
+> Завантаження даних...
+>
+> ЯСЯ
+>
+> Знайомтесь: Яся. Пухнаста смугаста красуня
+> з серйозним поглядом, від якого хочеться
+> одразу вибачитися, навіть якщо ти ні в чому
+> не винен.
+>
+> Її шубка переливається всіма відтінками
+> табі: темні смуги, сріблясті підпалини,
+> теплі пісочні тони на лапах і хвості.
+> Білосніжна манишка на грудях виглядає так,
+> ніби Яся збиралася на прийом, та так у ній
+> і залишилась. А зелені очі дивляться
+> уважно й трохи суворо, наче вона оцінює,
+> чи гідний ти сидіти поруч із нею на цьому
+> покривалі.
+>
+> Улюблений вираз мордочки в Ясі —
+> «я все бачу і все запам'ятаю». Вуха
+> з китичками чутливо ловлять кожен шерех,
+> довгі білі вуса стирчать на всі боки,
+> як антени, а лапки з темними подушечками
+> акуратно складені, як у справжньої леді.
+>
+> Та не дайте себе обдурити суворим
+> виглядом. Під цією поважною мордочкою
+> ховається м'який, теплий, мурчливий скарб,
+> який уміє зігріти дім самою своєю
+> присутністю. Яся не просто кішка.
+> Це маленька господиня, яка милостиво
+> дозволяє нам жити у своїй квартирі.
+>
+> Кінець програми.`;
+
+const wrap = document.getElementById('cat-wrap');
+const hint = document.getElementById('hint');
+const term = document.getElementById('terminal');
+const textEl = document.getElementById('text');
+const area  = document.getElementById('catarea');
+let started = false;
+
+area.addEventListener('click', function(e) {
+  e.preventDefault();
+  if (started) return;
+  started = true;
+
+  hint.style.opacity = '0';
+  wrap.classList.add('moved');          // рухається у правий центральний кут
+  setTimeout(startTypewriter, 1100);    // після переміщення — текст як у фільмах
+});
+
+function startTypewriter() {
+  term.style.display = 'block';
+  let i = 0;
+  (function type() {
+    if (i <= SCRIPT_TEXT.length) {
+      textEl.textContent = SCRIPT_TEXT.slice(0, i);
+      i++;
+      setTimeout(type, 20);
+    }
+  })();
+}
+</script>
+
+</body>
+</html>
